@@ -5,35 +5,47 @@ import axios from 'axios';
 import { server } from '../index';
 import { Container, HStack, VStack, Image, Heading, Text } from '@chakra-ui/react';
 import Loader from './Loader';
+import Error from './Error';
 
 const Exchanges = () => {
 
     const [exchanges, setExchanges] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
+
 
 
     useEffect(() => {
 
         const fetchExchanges = async () => {
-            const { data } = await axios.get(`${server}/exchanges`);
+            try {
+                const { data } = await axios.get(`${server}/exchanges`);
 
 
-            setExchanges(data);
-            setLoading(false);
+                setExchanges(data);
+                setLoading(false);
+            } catch (error) {
+                setError(true);
+                setLoading(false);
+
+            }
+
 
         };
         fetchExchanges();
     }, [])
 
 
-
+    if (error) {
+        return <Error message={"Exchanges were blocked by Elon Musk from showing up on your face!"} />
+    }
     return (
         <Container maxW={'container.xl'}>
 
 
             {loading ? <Loader /> : <>
 
-                <HStack wrap={'wrap'}>
+                <HStack wrap={'wrap'} justifyContent={'space-evenly'}>
                     {
                         exchanges.map((exchange) => (
                             <ExchangeCard key={exchange.id} name={exchange.name} image={exchange.image} rank={exchange.trust_score_rank} url={exchange.url} />
