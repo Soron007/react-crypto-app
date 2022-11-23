@@ -6,6 +6,10 @@ import { server } from '../index';
 import { useParams } from 'react-router-dom';
 import Error from './Error';
 import { HStack, RadioGroup, Radio, Text } from '@chakra-ui/react';
+import Chart from './Chart';
+
+
+
 
 const CoinDetails = () => {
     const [coin, setCoin] = useState({});
@@ -13,6 +17,10 @@ const CoinDetails = () => {
     const [error, setError] = useState(false);
 
     const [currency, setCurrency] = useState('inr');
+
+    const [days, setDays] = useState("24h");
+    const [chartArray, setChartArray] = useState([]);
+
 
     const currencySymbol = currency === 'inr' ? '₹' : currency === 'eur' ? '€' : '$'
 
@@ -24,8 +32,11 @@ const CoinDetails = () => {
             try {
                 const { data } = await axios.get(`${server}/coins/${params.id}`);
 
-                console.log(data);
+                const { data: chartData } = await axios.get(`${server}/coins/${params.id}/market_chart?vs_currency=${currency}&days=${days}`);
+
+
                 setCoin(data);
+                setChartArray(chartData.prices);
                 setLoading(false);
             } catch (error) {
                 setError(true);
@@ -48,10 +59,10 @@ const CoinDetails = () => {
                 loading ? <Loader /> : (
                     <>
                         <Box width={'full'} borderWidth={'1'}>
-
+                            <Chart arr={chartArray} currency={currencySymbol} days={days} />
                         </Box>
 
-                        {/* {Button} */}
+
 
                         <RadioGroup value={currency} onChange={setCurrency} p={'8'}>
                             <HStack spacing={'4'}>
