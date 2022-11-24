@@ -4,6 +4,7 @@ import Home from './Component/Home';
 import Coins from './Component/Coins';
 import Exchanges from './Component/Exchanges';
 import CoinDetails from './Component/CoinDetails';
+import Footer from './Component/Footer';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
 
 
       </Routes>
+      <Footer />
     </Router>
   );
 }

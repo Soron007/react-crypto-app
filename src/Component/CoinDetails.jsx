@@ -1,4 +1,4 @@
-import { Container, Box, VStack, Img, Stat, StatLabel, StatNumber, StatHelpText, StatArrow, Badge, Progress } from '@chakra-ui/react';
+import { Container, Box, VStack, Img, Stat, StatLabel, StatNumber, StatHelpText, StatArrow, Badge, Progress, Button } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react'
 import Loader from './Loader';
 import axios from 'axios';
@@ -26,6 +26,9 @@ const CoinDetails = () => {
 
     const params = useParams();
 
+    const btns = ['24h', '7d', '14d', '30d', '60d', '200d', '365d', 'max']
+
+
     useEffect(() => {
 
         const fetchCoins = async () => {
@@ -47,10 +50,54 @@ const CoinDetails = () => {
 
         };
         fetchCoins();
-    }, [params.id])
+    }, [params.id, currency, days])
 
     if (error) {
         return <Error message={"Coin Details were blocked by Elon Musk from showing up on your face!"} />
+    }
+
+    const switchChartStats = (btn) => {
+        switch (btn) {
+            case '24h':
+                setDays('24h');
+                setLoading(true);
+                break;
+            case '7d':
+                setDays('7d');
+                setLoading(true);
+                break;
+            case '14d':
+                setDays('14d');
+                setLoading(true);
+                break;
+            case '30d':
+                setDays('30d');
+                setLoading(true);
+                break;
+            case '60d':
+                setDays('60d');
+                setLoading(true);
+                break;
+            case '200d':
+                setDays('200d');
+                setLoading(true);
+                break;
+            case '365d':
+                setDays('365d');
+                setLoading(true);
+                break;
+            case 'max':
+                setDays('max');
+                setLoading(true);
+                break;
+
+
+
+            default:
+                setDays('24h');
+                setLoading(true);
+                break;
+        }
     }
 
     return (
@@ -62,6 +109,13 @@ const CoinDetails = () => {
                             <Chart arr={chartArray} currency={currencySymbol} days={days} />
                         </Box>
 
+                        <HStack p={'4'} overflowX={'auto'}>
+                            {
+                                btns.map((btn) => (
+                                    <Button key={btn} onClick={() => switchChartStats(btn)}>{btn}</Button>
+                                ))
+                            }
+                        </HStack>
 
 
                         <RadioGroup value={currency} onChange={setCurrency} p={'8'}>
